@@ -6,7 +6,7 @@
 /*   By: rbarbier <rbarbier@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/03/20 13:28:22 by rbarbier          #+#    #+#             */
-/*   Updated: 2024/04/03 12:21:30 by rbarbier         ###   ########.fr       */
+/*   Updated: 2024/04/08 17:02:53 by rbarbier         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,4 +33,5 @@ int	main(int argc, char **argv)
 		}
 		i = 0;
 	}
+	std::cout << std::endl;
 }
