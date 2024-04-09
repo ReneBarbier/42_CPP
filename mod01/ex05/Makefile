@@ -9,7 +9,7 @@ CXXFLAGS = -Werror -Wextra -Wall -std=c++98
 
 all: $(NAME)
 
-$(NAME): $(OBJS) harl.hpp
+$(NAME): $(OBJS) harl.hpp Makefile
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 clean:
