@@ -20,18 +20,18 @@ int input_check(int argc, char **argv)
 
 void replace(std::string *textLine, std::string replaced, std::string replacer)
 {
-    size_t pos = textLine->find(replaced);
-    if (pos == std::string::npos)
-        return ;
-    textLine->erase(pos, replaced.length());
-    textLine->insert(pos, replacer);
+	size_t pos = 0;
+	while ((pos = textLine->find(replaced, pos)) != std::string::npos)
+	{	
+		textLine->erase(pos, replaced.length());
+		textLine->insert(pos, replacer);
+	}
 }
 
 int main(int argc, char **argv)
 {
     if (input_check(argc, argv))
-       return (1);
-
+		return (1);
     std::fstream readFile(argv[1]);
     if (!readFile)
         return (std::cout << "error: no file found\n", 1);

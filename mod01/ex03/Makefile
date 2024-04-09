@@ -9,7 +9,7 @@ CXXFLAGS = -Werror -Wall -Wextra -std=c++98
 
 all: $(NAME)
 
-$(NAME): $(OBJS) HumanA.hpp HumanB.hpp Weapon.hpp
+$(NAME): $(OBJS) HumanA.hpp HumanB.hpp Weapon.hpp Makefile
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 clean:

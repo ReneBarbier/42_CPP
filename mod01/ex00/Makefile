@@ -9,7 +9,7 @@ CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
 all: $(NAME)
 
-$(NAME): $(OBJS) Zombie.hpp
+$(NAME): $(OBJS) Zombie.hpp Makefile
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 clean:

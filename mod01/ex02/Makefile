@@ -8,7 +8,7 @@ NAME = refePoint
 
 all: $(NAME)
 
-$(NAME): $(OBJ)
+$(NAME): $(OBJ) Makefile
 	$(CC) $(CPPFLAGS) $(OBJ) -o $(NAME)
 
 clean:

@@ -15,15 +15,17 @@ int main(int argv, char **argc)
             filter = i;
     switch (filter)
     {
-        case 0:
-            harl.complain("debug");
-        case 1:
-            harl.complain("info");
-        case 2:
-            harl.complain("warning");
+        case 0: 
+			harl.complain("debug");
+        case 1: 
+			harl.complain("info");
+        case 2: 
+			harl.complain("warning");
         case 3:
-            harl.complain("error");
+		{
+			harl.complain("error");
             break;
+		}
         default:
             std::cout << "[ Probably complaining about insignificant problems ]" << std::endl;
     }   
