@@ -2,18 +2,25 @@ NAME = fragWars
 
 SRCS = main.cpp ClapTrap.cpp ScavTrap.cpp FragTrap.cpp
 
-OBJS = $(SRCS:.cpp=.o)
+OBJ_DIR = obj
+OBJS = $(addprefix $(OBJ_DIR)/,$(notdir $(SRCS:.cpp=.o)))
 
 CXX = clang++
 CXXFLAGS = -Wall -Wextra -Werror -std=c++98
 
-all: $(NAME)
+all: $(OBJ_DIR) $(NAME)
 
-$(NAME): $(OBJS) ClapTrap.hpp ScavTrap.hpp FragTrap.hpp Makefile
+$(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
+$(OBJ_DIR)/%.o: %.cpp Makefile
+	$(CXX) $(CXXFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR):
+	mkdir -p $(OBJ_DIR)
+
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJ_DIR)
 
 fclean: clean
 	rm -f $(NAME)
@@ -21,3 +28,5 @@ fclean: clean
 re: fclean all
 
 .PHONY: all clean fclean re
+
+-include $(OBJS:.o=.d)

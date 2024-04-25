@@ -12,15 +12,9 @@ Point::Point(const float x, const float y) : _x(x), _y(y)
 {
 }
 
-// Point &Point::operator=(const Point &point)
-// {
-// 	if (this != &point)
-// 	{
-// 		this->_x = point._x;
-// 		this->_y = point._y;
-// 	}
-// 	return *this;
-// }
+Point &Point::operator=(const Point &point)
+{
+}
 
 Point::~Point()
 {

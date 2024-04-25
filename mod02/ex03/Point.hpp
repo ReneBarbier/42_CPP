@@ -11,7 +11,7 @@ class Point
 	public:
 		Point();
 		Point(const Point &point);
-		//Point &operator=(const Point &point);
+		Point &operator=(const Point &point);
 		~Point();
 		Point(const float x, const float y);
 		float getX(void) const;

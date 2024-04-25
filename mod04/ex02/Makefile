@@ -1,6 +1,6 @@
 NAME = DogsAndCats
 
-SRCS = Animal.cpp Dog.cpp Cat.cpp WrongAnimal.cpp WrongCat.cpp main.cpp
+SRCS = AAnimal.cpp Dog.cpp Cat.cpp main.cpp Brain.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
@@ -9,7 +9,7 @@ CXXFLAGS = -Werror -Wextra -Wall -std=c++98
 
 all: $(NAME)
 
-$(NAME): $(OBJS) Animal.hpp Cat.hpp Dog.hpp WrongAnimal.hpp WrongCat.hpp Makefile
+$(NAME): $(OBJS) AAnimal.hpp Cat.hpp Dog.hpp Brain.hpp Makefile
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 clean:
