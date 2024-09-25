@@ -1,12 +1,16 @@
-NAME = ZombieSpawn
+NAME = Bureaucrat
 
-SRCS = main.cpp Zombie.cpp newZombie.cpp randomChump.cpp
+SRCS = main.cpp Bureaucrat.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
 CXX = clang++
+
+CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+
 all: $(NAME)
 
+$(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
 
 clean:
@@ -16,5 +20,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-.PHONY: all clean fclean re
