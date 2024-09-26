@@ -1,13 +1,36 @@
 #pragma once
 
 #include <iostream>
+#include <cctype>
+#include <algorithm>
+
+#define CHAR 0
+#define INT 1
+#define FLOAT 2
+#define DOUBLE 3
+#define ERROR 1
 
 class ScalarConverter 
 {
 	private:
-		int getType();
-		std::string getInput();
+		char	_char;
+		int		_int;
+		float	_float;
+		double	_double;
+
+		void fromChar();
+		void fromInt();
+		void fromFloat();
+		void fromDouble();
+
+		void strToChar(std::string input);
+		void strToInt(std::string input);
+		void strToFloat(std::string input);
+		void strToDouble(std::string input);
+		
+		int getType(std::string input);
+		int checkInput(std::string input);
     public:
-		static void convert(std::string input);
-		virtual ~ScalarConverter() = 0;
+		void convert(std::string input);
+		//virtual ~ScalarConverter() = 0;
 };
