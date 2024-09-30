@@ -3,6 +3,7 @@
 #include <iostream>
 #include <cctype>
 #include <algorithm>
+#include <cmath>
 
 #define CHAR 0
 #define INT 1
@@ -30,6 +31,8 @@ class ScalarConverter
 		
 		int getType(std::string input);
 		int checkInput(std::string input);
+		int checkForSpecialCases(std::string input);
+		int checkOverflow(std::string input);
     public:
 		void convert(std::string input);
 		//virtual ~ScalarConverter() = 0;
