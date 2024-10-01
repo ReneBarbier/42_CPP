@@ -1,25 +1,26 @@
-#ifndef FORM_HPP
-# define FORM_HPP
+#ifndef AFORM_HPP
+# define AFORM_HPP
 
-# include <iostream>
+#include <iostream>
 
 class Bureaucrat;
 
-class Form
+class AForm
 {
-    private:
+    protected:
         std::string const _name;
         bool _signed;
         int _gradeToSign;
         int _gradeToExecute;
     public:
-        Form();
-        Form(std::string name, int gradeToSign, int gradeToExecute);
-        Form(Form const &cpy);
-        ~Form();
+        AForm(int _gradeToExecute);
+        AForm(std::string name, int gradeToSign, int gradeToExecute);
+        AForm(AForm const &cpy);
+        ~AForm();
         
         std::string getName();
         void beSigned(Bureaucrat const &b);
+		void execute(Bureaucrat const & executor) const;
         
         class GradeTooLowException : public std::exception
         {
