@@ -2,14 +2,13 @@
 
 Base *generate()
 {
-// instantiate a random derived class and return it
 	int random = rand() % 3;
 	if (random == 0)
-		return new A;
+		return (std::cout << "its A" << std::endl, new A);
 	else if (random == 1)
-		return new B;
+		return (std::cout << "its B" << std::endl, new B);
 	else
-		return new C;
+		return (std::cout << "its C" << std::endl, new C);
 }
 
 void identify(Base *p)
@@ -24,8 +23,7 @@ void identify(Base *p)
 
 void identify(Base &p)
 {
-	try
-	{
+	try {
 		A &a = dynamic_cast<A&>(p);
 		(void)a;
 		std::cout << "A" << std::endl;
@@ -33,8 +31,7 @@ void identify(Base &p)
 	catch (std::bad_cast &e)
 	{
 	}
-	try
-	{
+	try {
 		B &b = dynamic_cast<B&>(p);
 		(void)b;
 		std::cout << "B" << std::endl;
@@ -42,8 +39,7 @@ void identify(Base &p)
 	catch (std::bad_cast &e)
 	{
 	}
-	try
-	{
+	try {
 		C &c = dynamic_cast<C&>(p);
 		(void)c;
 		std::cout << "C" << std::endl;

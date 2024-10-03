@@ -1,16 +1,13 @@
 #pragma once
 
-#include <cstring>
 #include <iostream>
+#include <exception>
+#include <random>
 
 class Base
 {
 	public:
 		virtual ~Base();
-
-		Base *generate(void);
-		void identify(Base* p);
-		void identify(Base& p);
 };
 
 class A : public Base {};
