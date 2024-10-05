@@ -18,9 +18,17 @@ int main()
 
 		oddNumbers.printArray("oddNumbers");
 		numbers.printArray("numbers");
+		
+		try {
+			numbers[10] = 5;
+		}
+		catch (Array<int>::InvalidIndexException &e) {	
+			std::cout << "Caught exception: " << e.what() << std::endl;
+		}
 	}
 	{
-		Array<char> sayHi(12);
+		int * a = new int();
 
+		std::cout << "a: " << *a << std::endl;
 	}
 }
