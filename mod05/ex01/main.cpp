@@ -16,4 +16,37 @@ int main(void)
 
 	   mark.signForm(b);
     }
+<<<<<<< HEAD
+=======
+    std::cout << "---------------------" << std::endl;
+    {
+        Bureaucrat miquel("Miquel", 2);
+        try
+        {
+            miquel.incrementGrade();
+            std::cout << miquel << std::endl;
+            miquel.incrementGrade();
+            std::cout << miquel << std::endl;
+        }
+        catch (std::exception &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
+    }
+    std::cout << "---------------------" << std::endl;
+    {
+        Bureaucrat jordi("Jordi", 149);
+        try
+        {
+            jordi.decrementGrade();
+            std::cout << jordi << std::endl;
+            jordi.decrementGrade();
+            std::cout << jordi << std::endl;
+        }
+        catch (std::exception &e)
+        {
+            std::cout << e.what() << std::endl;
+        }
+    }
+>>>>>>> 67d0c77fea34c71609e657bbaf74b775e15c7f8e
 }

@@ -1,5 +1,15 @@
 #include "ScalarConverter.hpp"
 
+ScalarConverter::ScalarConverter() {}
+
+ScalarConverter::ScalarConverter(ScalarConverter &cpy) {}
+
+ScalarConverter &ScalarConverter::operator=(ScalarConverter &cpy) {
+	return (*this);
+}
+
+ScalarConverter::~ScalarConverter() {}
+
 void ScalarConverter::convert(std::string input)
 {
 	int type;
@@ -54,7 +64,7 @@ int ScalarConverter::checkInput(std::string input)
 		return (ERROR);
 	if (input.find(".") != std::string::npos)
 	{
-		if (std::count(input.begin(), input.end(), '.') > 1)
+		if (input.find_first_of(".") != input.find_last_of("."))
 			return (ERROR);
 		pos = input.find(".");
 		if (pos == 0 || pos == input.length() - 1 || input[pos + 1] == 'f')
@@ -90,7 +100,7 @@ int ScalarConverter::checkOverflow(std::string input)
 		return (ERROR);
 	if (input.find(".") == std::string::npos && input.length() > 10)
 		return (ERROR);
-	long tmp = std::atol(input.c_str());
+	long tmp = atol(input.c_str());
 	if (tmp > 2147483647 || tmp < -2147483648)
 		return (ERROR);
 	return (0);
@@ -103,17 +113,17 @@ void ScalarConverter::strToChar(std::string input)
 
 void ScalarConverter::strToInt(std::string input)
 {
-	this->_int = std::atoi(input.c_str());
+	this->_int = atoi(input.c_str());
 }
 
 void ScalarConverter::strToFloat(std::string input)
 {
-	this->_float = std::atof(input.c_str());
+	this->_float = atof(input.c_str());
 }
 
 void ScalarConverter::strToDouble(std::string input)
 {
-	this->_double = std::atof(input.c_str());
+	this->_double = atof(input.c_str());
 }
 
 void ScalarConverter::fromChar()

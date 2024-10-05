@@ -2,7 +2,6 @@
 
 #include <iostream>
 #include <cctype>
-#include <algorithm>
 #include <cmath>
 
 #define CHAR 0
@@ -18,6 +17,11 @@ class ScalarConverter
 		int		_int;
 		float	_float;
 		double	_double;
+
+		ScalarConverter();
+		ScalarConverter(ScalarConverter &cpy);
+		ScalarConverter &operator=(ScalarConverter &cpy);
+		~ScalarConverter();
 
 		void fromChar();
 		void fromInt();
@@ -35,5 +39,4 @@ class ScalarConverter
 		int checkOverflow(std::string input);
     public:
 		void convert(std::string input);
-		//virtual ~ScalarConverter() = 0;
 };
