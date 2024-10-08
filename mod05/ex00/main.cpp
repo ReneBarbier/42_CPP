@@ -43,8 +43,7 @@ int main(void)
     std::cout << "---------------------" << std::endl;
     {
         Bureaucrat jordi("Jordi", 149);
-        try
-        {
+        try {
             jordi.decrementGrade();
             std::cout << jordi << std::endl;
             jordi.decrementGrade();
