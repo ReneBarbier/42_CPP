@@ -2,21 +2,35 @@ NAME = Bureaucrat
 
 SRCS = main.cpp Bureaucrat.cpp Form.cpp
 
-OBJS = $(SRCS:.cpp=.o)
+INC = Bureaucrat.hpp Form.hpp
 
-CXX = clang++
+OBJS = $(addprefix $(DIR_OBJS)/, $(SRCS:.cpp=.o))
 
-CXXFLAGS = -Wall -Wextra -Werror -std=c++98
+DIR_OBJS = .obj
 
-all: $(NAME)
+CXX = c++ -std=c++98
 
-$(NAME): $(OBJS)
-	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+CXXFLAGS = -Wall -Wextra -Werror 
+
+all: $(DIR_OBJS) $(NAME)
+
+$(NAME): $(OBJS) 
+	@$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+	@echo $@ fet
+
+$(DIR_OBJS):	
+	@mkdir -p $(DIR_OBJS)
+
+$(DIR_OBJS)/%.o : %.cpp $(INC) Makefile
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo $< a $@
 
 clean:
-	rm -f $(OBJS)
+	@rm -rf $(DIR_OBJS)
+	@echo $@
 
 fclean: clean
-	rm -f $(NAME)
+	@rm -rf $(NAME)
+	@echo $@
 
 re: fclean all

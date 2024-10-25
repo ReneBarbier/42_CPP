@@ -7,8 +7,8 @@
 int main(void)
 {
 	{
-		Bureaucrat john("John", 60);
-		PresidentialPardonForm a("home");
+		Bureaucrat john("John", 5);
+		RobotomyRequestForm a("user");
 
 		try {
 			john.signForm(a);

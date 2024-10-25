@@ -4,21 +4,21 @@ Base *generate()
 {
 	int random = rand() % 3;
 	if (random == 0)
-		return (std::cout << "its A" << std::endl, new A);
+		return (std::cout << "Obj of class A generated." << std::endl, new A);
 	else if (random == 1)
-		return (std::cout << "its B" << std::endl, new B);
+		return (std::cout << "Obj of class B generated." << std::endl, new B);
 	else
-		return (std::cout << "its C" << std::endl, new C);
+		return (std::cout << "Obj of class C generated." << std::endl, new C);
 }
 
 void identify(Base *p)
 {
 	if (dynamic_cast<A*>(p))
-		std::cout << "A" << std::endl;
+		std::cout << "identify(Base *p) -> \'A\'" << std::endl;
 	else if (dynamic_cast<B*>(p))
-		std::cout << "B" << std::endl;
+		std::cout << "identify(Base *p) -> \'B\'" << std::endl;
 	else if (dynamic_cast<C*>(p))
-		std::cout << "C" << std::endl;
+		std::cout << "identify(Base *p) -> \'C\'" << std::endl;
 }
 
 void identify(Base &p)
@@ -26,7 +26,7 @@ void identify(Base &p)
 	try {
 		A &a = dynamic_cast<A&>(p);
 		(void)a;
-		std::cout << "A" << std::endl;
+		std::cout << "identify(Base &p) -> \'A\'" << std::endl;
 	}
 	catch (std::bad_cast &e)
 	{
@@ -34,7 +34,7 @@ void identify(Base &p)
 	try {
 		B &b = dynamic_cast<B&>(p);
 		(void)b;
-		std::cout << "B" << std::endl;
+		std::cout << "identify(Base &p) -> \'B\'" << std::endl;
 	}
 	catch (std::bad_cast &e)
 	{
@@ -42,7 +42,7 @@ void identify(Base &p)
 	try {
 		C &c = dynamic_cast<C&>(p);
 		(void)c;
-		std::cout << "C" << std::endl;
+		std::cout << "identify(Base &p) -> \'C\'" << std::endl;
 	}
 	catch (std::bad_cast &e)
 	{

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef WHATEVER_HPP
+#define WHATEVER_HPP
 
 #include <iostream>
 
@@ -26,3 +27,5 @@ T max(T a, T b)
 		return a;
 	return b;
 }
+
+#endif

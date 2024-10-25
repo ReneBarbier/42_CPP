@@ -4,7 +4,7 @@ SRC = ScalarConverter.cpp main.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-CXX = clang++ -std=c++98
+CXX = c++ -std=c++98
 
 CXXFLAGS = -Wall -Wextra -Werror
 
@@ -12,6 +12,9 @@ all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
+
+%.o: %.cpp ScalarConverter.hpp Makefile
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)

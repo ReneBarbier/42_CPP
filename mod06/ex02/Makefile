@@ -4,7 +4,7 @@ SRCS = main.cpp Base.cpp
 
 OBJS = $(SRCS:.cpp=.o)
 
-XX = -clang++ -std=c++98
+XX = -c++ -std=c++98
 
 CXXFLAGS = -Werror -Wall -Wextra
 
@@ -12,6 +12,9 @@ all: $(NAME)
 
 $(NAME) : $(OBJS)
 	$(CXX) $(CXXFLAGS) $(OBJS) -o $(NAME)
+
+%.o : %.cpp Base.hpp Makefile
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
@@ -21,4 +24,4 @@ fclean : clean
 
 re: fclean all
 
-PHONY: all clean fclean re
+.PHONY: all clean fclean re

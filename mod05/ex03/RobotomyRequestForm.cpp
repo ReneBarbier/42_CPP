@@ -2,7 +2,7 @@
 #include "Bureaucrat.hpp"
 #include <cstdlib>
 
-RobotomyRequestForm::RobotomyRequestForm(std::string target) : AForm("Robotomy", 72, 45)
+RobotomyRequestForm::RobotomyRequestForm(std::string target) : Form("Robotomy", 72, 45)
 {
 	this->_target = target;
 }
@@ -30,14 +30,13 @@ std::string RobotomyRequestForm::getTarget() const
 void RobotomyRequestForm::execute(Bureaucrat const &executor) const
 {
 	if (this->getSigned() == false)
-		throw AForm::FormNotSigned();
+		throw Form::FormNotSigned();
 	if (executor.getGrade() > this->getGradeToExecute())
-		throw AForm::GradeTooLowException();
+		throw Form::GradeTooLowException();
 	std::cout << "*drilling noises*" << std::endl;
 	srand(time(NULL));
-	if (rand() % 2)
+	if (rand() % 2 == 0)
 		std::cout << this->getTarget() << " has been robotomized." << std::endl;
 	else
-		std::cout << "Robotomy has failed (no apparent reason)." << std::endl;
-
+		std::cout << "Robotomy has failed (no aparent reason)." << std::endl;
 }

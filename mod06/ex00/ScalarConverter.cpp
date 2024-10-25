@@ -138,12 +138,11 @@ void ScalarConverter::convert(std::string input)
 	if (checkInput(input))
 		return (std::cout << "Error: Invalid input" << std::endl, void());
 
+	if (checkOverflow(input))
+		return (std::cout << "Error: Overflow" << std::endl, void());
+
 	if (input.length() == 1 && std::isprint(input[0]) && !std::isdigit(input[0]))
-	{
 		fromChar(input[0]);
-		if (checkOverflow(input))
-			return (std::cout << "Error: Overflow" << std::endl, void());
-	}
 	else if (input.find("f") != std::string::npos)
 		fromFloat(atof(input.c_str()));
 	else if (input.find(".") != std::string::npos)

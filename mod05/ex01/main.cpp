@@ -16,8 +16,6 @@ int main(void)
 
 	   mark.signForm(b);
     }
-<<<<<<< HEAD
-=======
     std::cout << "---------------------" << std::endl;
     {
         Bureaucrat miquel("Miquel", 2);
@@ -48,5 +46,4 @@ int main(void)
             std::cout << e.what() << std::endl;
         }
     }
->>>>>>> 67d0c77fea34c71609e657bbaf74b775e15c7f8e
 }

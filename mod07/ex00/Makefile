@@ -4,7 +4,7 @@ SRC		= main.cpp
 
 OBJ		= $(SRC:.cpp=.o)
 
-CXX		= -clang++ -std=c++98
+CXX		= -c++ -std=c++98
 
 CXXFLAG = -Werror -Wextra -Wall
 
