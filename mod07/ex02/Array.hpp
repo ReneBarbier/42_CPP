@@ -33,17 +33,15 @@ class Array
 			if (cpy.size() != 0) {
 				this->_size = cpy.size();
 				this->_array = new T[this->_size];
-				for (int i = 0; i < this->_size; i++)
+				for (unsigned int i = 0; i < this->_size; i++)
 					this->_array[i] = cpy._array[i];
 			}
 			return *this;
 		}	
 
 		T &operator[](unsigned int index) {
-			if (index >= _size) {
-				std::cout << "index: " << index << std::endl;
+			if (index >= _size)
 				throw Array<T>::InvalidIndexException();
-			}
 			return (_array[index]);
 		}
 
@@ -53,23 +51,22 @@ class Array
 
 		void printArray(std::string name) {
 			std::cout << name << ": ";
-			for (int i = 0; i < _size; i++)
+			for (unsigned int i = 0; i < _size; i++)
 				std::cout << _array[i];
 			std::cout << std::endl;
 		}
 
 		~Array() {
-			delete[] _array;
+			if (_array != NULL)
+				delete[] _array;
 		}
 
 		class InvalidIndexException : public std::exception
 		{
 			public:
-				const char *what() const throw();
+				const char *what() const throw() {
+					return "Invalid index";
+				}
 		};	
 };
 
-template <typename T>
-const char *Array<T>::InvalidIndexException::what() const throw() {
-	return "Invalid index";
-}

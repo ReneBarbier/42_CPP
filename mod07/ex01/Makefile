@@ -13,6 +13,9 @@ all: $(NAME)
 $(NAME) : $(OBJ)
 	$(CXX) $(CXXFLAGS) $(OBJ) -o $(NAME)
 
+%.o: %.cpp iter.cpp Makefile
+	$(CXX) $(CXXFLAGS) -c $< -o $@
+
 clean:
 	rm -f $(OBJ)
 

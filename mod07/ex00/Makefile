@@ -11,7 +11,10 @@ CXXFLAG = -Werror -Wextra -Wall
 all: $(NAME)
 
 $(NAME) : $(OBJ)
-	$(CXX) $(CXXFLAG) $(OBJ) -o $(NAME)
+	$(CXX) $(CXXFLAG) $(OBJ) -o $@
+
+%.o: %.cpp whatever.hpp
+	$(CXX) $(CXXFLAG) -c $< -o $@
 
 clean:
 	rm -f $(OBJ)
