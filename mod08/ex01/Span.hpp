@@ -16,8 +16,10 @@ class Span
 		~Span();
 
 		void addNumber(int newNumber);
-		int shortestSpan();
-		int longestSpan();
+		void addManyRandom(int amount);
+		void printStorage() const;
+		int shortestSpan() const;
+		int longestSpan() const;
 
 		unsigned int get_maxElem() const;
 		

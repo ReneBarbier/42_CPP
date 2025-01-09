@@ -1,5 +1,6 @@
 #include "Span.hpp"
 #include <limits.h>
+#include <cstdlib>
 
 Span::Span(int N) : max_elements(N) {
 }
@@ -22,7 +23,7 @@ void Span::addNumber(int newNumber) {
 	this->storage.push_back(newNumber);
 }
 
-int Span::shortestSpan() {
+int Span::shortestSpan() const {
 	if (this->storage.size() < 2)
 		throw Span::NotEnoughElementsException();
 
@@ -40,12 +41,25 @@ int Span::shortestSpan() {
 	return min;
 }
 
-int Span::longestSpan() {
+int Span::longestSpan() const {
 	if (this->storage.size() < 2)
 		throw Span::NotEnoughElementsException();
 	std::list<int> sorted = this->storage;
 	sorted.sort();
 	return sorted.back() - sorted.front();
+}
+
+void Span::addManyRandom(int amount) {
+	srand(time(NULL));
+	for (int i = 0; i < amount; i++)
+		this->addNumber(rand() % 1000);
+}
+
+void Span::printStorage() const {
+	std::list<int>::const_iterator it;
+	for (it = this->storage.begin(); it != this->storage.end(); it++)
+		std::cout << *it << " ";
+	std::cout << std::endl;
 }
 
 unsigned int Span::get_maxElem() const {
