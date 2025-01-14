@@ -1,6 +1,6 @@
-#pragma once
+#ifndef ARRAY_HPP
+#define ARRAY_HPP
 
-#include <exception>
 #include <iostream>
 
 template <class T>
@@ -70,3 +70,4 @@ class Array
 		};	
 };
 
+#endif

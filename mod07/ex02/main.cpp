@@ -12,11 +12,16 @@ int main()
 		
 		Array<int> oddNumbers(numbers);
 
+		oddNumbers.printArray("oddNumbers");
+
 		for (int i = 0; i < 10; i++)
 			if (oddNumbers[i] % 2 == 0)
 				oddNumbers[i]++;
 
 		oddNumbers.printArray("oddNumbers");
+		numbers.printArray("numbers");
+
+		numbers = oddNumbers;
 		numbers.printArray("numbers");
 		
 		try {
@@ -25,10 +30,5 @@ int main()
 		catch (Array<int>::InvalidIndexException &e) {	
 			std::cout << "Caught exception: " << e.what() << std::endl;
 		}
-	}
-	{
-		int * a = new int();
-
-		std::cout << "a: " << *a << std::endl;
 	}
 }

@@ -5,11 +5,6 @@ void set_three(int &n)
 	n = 3;	
 }
 
-void print(std::string &str)
-{
-	std::cout << str << std::endl;
-}
-
 void to_upper(std::string &str)
 {
 	for (size_t i = 0; i < str.size(); i++)
