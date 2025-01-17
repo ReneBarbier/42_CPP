@@ -34,7 +34,7 @@ int main(void)
 		std::stack<int> s(mstack);
 	}
 	{
-		std::cout << "wiht a list\n";
+		std::cout << "with a list\n";
 		std::list<int> mstack;
 
 		mstack.push_back(5);

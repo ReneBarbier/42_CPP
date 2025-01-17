@@ -1,18 +1,19 @@
-NAME = Span
+NAME = RPN
 
-SRC = main.cpp Span.cpp
+SRC = main.cpp RPN.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
-CPP= -c++ -std=c++98
-CFLAGS = -Wall -Wextra -Werror 
+CPP = -c++ -std=c++98
+
+CFLAGS = -Werror -Wextra -Wall
 
 all: $(NAME)
 
 $(NAME): $(OBJ)
 	$(CPP) $(CFLAGS) $(OBJ) -o $(NAME)
 
-%.o : %.cpp Makefile Span.hpp
+%.o: %.cpp Makefile RPN.hpp
 	$(CPP) $(CFLAGS) -c $< -o $@
 
 clean:
@@ -23,4 +24,4 @@ fclean: clean
 
 re: fclean all
 
-.PHONY: all clean fclean re
+.PHONY: all fclean clean re
