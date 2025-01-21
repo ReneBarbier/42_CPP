@@ -1,31 +1,11 @@
 #include "BitcoinExchange.hpp"
-#include <iostream>
-#include <string>
-#include <map>
-#include <fstream>
 
-std::map<std::string, float> getExchangeRates(std::ifstream inputFile)
-{
-	std::map<std::string, float> map;
-	char c;
-	char *key;
-	char *value;
-	bool key_value = true;
-
-	while (inputFile) {
-		c = inputFile.get();
-		if (c == ',')
-			key_value = !key_value;
-		if (c == '\n') {
-			key_value = !key_value;
-			map.insert({key, std::atof(value.c_str())});
-		}
-		if (key_value)
-			key += c;
-		else
-			value += c;
+void printFile(std::ifstream& file) {
+	std::cout << "File content:" << std::endl;
+	std::string line;
+	while (std::getline(file, line)) {
+		std::cout << line << std::endl;
 	}
-	return map;
 }
 
 int main (int argc, char** argv) {
@@ -34,11 +14,14 @@ int main (int argc, char** argv) {
 		std::cerr << "Usage: " << argv[0] << " <input file>" << std::endl;
 		return 1;
 	}
-	std::ifstream inputFile(argv[1]); // whatchout for nulls and thigs
-	if (!inputFile.is_open()) {
+	std::ifstream input_file(argv[1]); // whatchout for nulls and thigs
+	std::ifstream data_base("data.csv");
+	if (!input_file.is_open() || !data_base.is_open()) {
 		std::cerr << "ERROR: Unable to open file " << argv[1] << std::endl;
 		return 1;
 	}	
-	std::map<std::string, float> exchangeRates = getExchangeRates(inputFile);	
+	std::map<std::string, double> exchangeRates = getExchangeRates(data_base);	
+	exchange(input_file, exchangeRates);
+	
 	return 0;
 }
