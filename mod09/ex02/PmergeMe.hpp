@@ -5,6 +5,7 @@
 #include <vector>
 #include <deque>
 #include <cstdlib>
+#include <cmath>
 
 double PmergeMeVec(std::vector<int> *vec);
 double PmergeMeDeque(std::deque<int> *deq);

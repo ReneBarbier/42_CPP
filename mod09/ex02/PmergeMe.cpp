@@ -46,11 +46,11 @@ bool safeIter(std::vector<int>::iterator *it, std::vector<int>::iterator end, in
 
 void pairSortRec(std::vector<int> *vec, unsigned rec_level)
 {
-	if (rec_level * 2 > vec->size() / 2)
+	if (pow(2, rec_level) > vec->size() / 2)
 		return;
 
-	std::vector<int>::iterator it = rec_level ? vec->begin() + rec_level * 2 - 1 : vec->begin();
-	std::vector<int>::iterator it2 = rec_level ? vec->begin() + rec_level * 4 - 1 : vec->begin() + 1;
+	std::vector<int>::iterator it = rec_level ? vec->begin() + pow(2, rec_level) - 1 : vec->begin();
+	std::vector<int>::iterator it2 = rec_level ? vec->begin() + pow(2, rec_level + 1) - 1: vec->begin() + 1;
 
 	std::vector<int>::iterator decoy1;
 	std::vector<int>::iterator decoy2;
@@ -67,9 +67,9 @@ void pairSortRec(std::vector<int> *vec, unsigned rec_level)
 			}
 		}
 
-		if (!safeIter(&it2, vec->end(), (rec_level + 1) * 2))
+		if (!safeIter(&it2, vec->end(), pow(2, rec_level + 1)))
 			break;
-		it += (rec_level + 1) * 2;
+		it += pow(2, rec_level + 1); 
 	}
 	//debug
 	std::cout << "Recursion level: " << rec_level + 1 << std::endl;
