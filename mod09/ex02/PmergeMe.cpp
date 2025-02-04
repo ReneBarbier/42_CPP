@@ -71,17 +71,62 @@ void pairSortRec(std::vector<int> *vec, unsigned rec_level)
 			break;
 		it += pow(2, rec_level + 1); 
 	}
+
 	//debug
 	std::cout << "Recursion level: " << rec_level + 1 << std::endl;
 	printVec(*vec);
 
 	pairSortRec(vec, ++rec_level);
 }
+
+int jacobsthal(int n)
+{
+	if (n == 0) return 0;
+	if (n == 1) return 1;
+
+	int a = 0, b = 1;
+	for (int i = 2; i <= n; ++i) {
+		int temp = b;
+		b = b + 2 * a;  // J(i) = J(i-1) + 2 * J(i-2)
+		a = temp;
+	}
+	return b;  // Return J(n)
+}
+
+std::list<element>::iterator jacobsthalInit(std::list<element> &pend, int rec_level)
+{
+	std::list<element>::iterator it = pend.begin();
+	int insertions = jacobsthal(rec_level + 3) - jacobsthal(rec_level + 2);
+
+	// if the number of insertions is greater than the number of elements in pend
+	// it will return the last element. But then its the end of the recursion (no more elements to insert)
+	std::advance(it, insertions);
+	return it;
+}
+
+void insertion(std::vector<int> *vec, int rec_level)
+{
+	std::list<element> main;
+	std::list<element> pend;
+
+	initMain(&main, vec, rec_level);
+	initPend(&pend, vec, rec_level);
+
+	while (!pend.empty()) {
+		std::list<element>::iterator insert = jacobsthalInit(pend, rec_level);
+		std::list<element>::iterator slot = main.begin();
+
+		
+	}	
+
+}
 	
 double PmergeMeVec(std::vector<int> *vec) {
 	time_t start = time(NULL);
 
 	pairSortRec(vec, 0);
+	//insertion(vec);
+	std::cout << "jacob: " << jacobsthal(17) << std::endl;
 
 	time_t end = time(NULL);
 	return difftime(end, start);
