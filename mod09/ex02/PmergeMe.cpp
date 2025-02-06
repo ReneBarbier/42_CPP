@@ -21,6 +21,7 @@ std::vector<int> getVector(char **input)
 	return vec;
 }
 
+// print the vector
 void printVec(std::vector<int> &vec)
 {
 	std::vector<int>::iterator it = vec.begin();
@@ -32,6 +33,18 @@ void printVec(std::vector<int> &vec)
 	std::cout << std::endl;
 }
 
+void printList(std::list<element> &list)
+{
+	std::list<element>::iterator it = list.begin();
+
+	while (it != list.end()) {
+		std::cout << it->type << it->tag << " ";
+		printVec(it->vec);
+		it++;
+	}
+}
+
+// advance the it2 iterator by 2^rec_level iteratively
 bool safeIter(std::vector<int>::iterator *it, std::vector<int>::iterator end, int iterations)
 {
 	while (iterations > 0) {
@@ -44,13 +57,14 @@ bool safeIter(std::vector<int>::iterator *it, std::vector<int>::iterator end, in
 	return true;
 }
 
-void pairSortRec(std::vector<int> *vec, unsigned rec_level)
+// first face of the algorithm
+void pairSortRec(std::vector<int> *vec, unsigned int *rec_level)
 {
-	if (pow(2, rec_level) > vec->size() / 2)
+	if (pow(2, *rec_level) > vec->size() / 2)
 		return;
 
-	std::vector<int>::iterator it = rec_level ? vec->begin() + pow(2, rec_level) - 1 : vec->begin();
-	std::vector<int>::iterator it2 = rec_level ? vec->begin() + pow(2, rec_level + 1) - 1: vec->begin() + 1;
+	std::vector<int>::iterator it = vec->begin() + pow(2, *rec_level) - 1;
+	std::vector<int>::iterator it2 = vec->begin() + pow(2, *rec_level + 1) - 1;
 
 	std::vector<int>::iterator decoy1;
 	std::vector<int>::iterator decoy2;
@@ -67,27 +81,26 @@ void pairSortRec(std::vector<int> *vec, unsigned rec_level)
 			}
 		}
 
-		if (!safeIter(&it2, vec->end(), pow(2, rec_level + 1)))
+		if (!safeIter(&it2, vec->end(), pow(2, *rec_level + 1)))
 			break;
-		it += pow(2, rec_level + 1); 
+		it += pow(2, *rec_level + 1); 
 	}
 
 	//debug
-	std::cout << "Recursion level: " << rec_level + 1 << std::endl;
+	std::cout << "Recursion level: " << *rec_level + 1 << std::endl;
 	printVec(*vec);
 
-	pairSortRec(vec, ++rec_level);
+	(*rec_level)++;
+	pairSortRec(vec, rec_level);
 }
 
+// return the Nth element of the Jacobsthal sequence
 int jacobsthal(int n)
 {
-	if (n == 0) return 0;
-	if (n == 1) return 1;
-
-	int a = 0, b = 1;
-	for (int i = 2; i <= n; ++i) {
+	int a = 1, b = 1;
+	for (int i = 0; i < n; ++i) {
 		int temp = b;
-		b = b + 2 * a;  // J(i) = J(i-1) + 2 * J(i-2)
+		b = b + a*2;  // J(i) = J(i-1) + 2 * J(i-2)
 		a = temp;
 	}
 	return b;  // Return J(n)
@@ -95,38 +108,152 @@ int jacobsthal(int n)
 
 std::list<element>::iterator jacobsthalInit(std::list<element> &pend, int rec_level)
 {
-	std::list<element>::iterator it = pend.begin();
-	int insertions = jacobsthal(rec_level + 3) - jacobsthal(rec_level + 2);
-
-	// if the number of insertions is greater than the number of elements in pend
-	// it will return the last element. But then its the end of the recursion (no more elements to insert)
-	std::advance(it, insertions);
+	std::list<element>::iterator insert = pend.begin();
+	size_t insertions = jacobsthal(rec_level) - jacobsthal(rec_level - 1);
+	if (insertions > pend.size())
+		return std::prev(pend.end());
+	std::advance(insert, insertions - 1);
 	return it;
 }
 
+// initialize the main list
+void initMain(std::list<element> *main, std::vector<int> *vec, int rec_level)
+{
+	element elem;
+	std::vector<int> sub_vec(1 << rec_level);
+	std::vector<int>::iterator it = vec->begin() + (1 << rec_level);
+	int tag_assign = 1;
+
+	while (it != vec->end()) {
+		std::copy(it, it + (1 << rec_level), sub_vec.begin());
+		elem.vec = sub_vec;
+		elem.type = 'a';
+		elem.tag = tag_assign++;
+		main->push_back(elem);
+		if ((1 << rec_level) + (1 << (rec_level + 1)) > std::distance(it, vec->end()))
+			break;
+		it += 1 << (rec_level + 1);
+	}
+}
+
+// initialize the pend list
+element initPend(std::list<element> *pend, std::vector<int> *vec, int rec_level)
+{
+	element elem;
+	std::vector<int> sub_vec(1 << rec_level);
+	std::vector<int>::iterator it = vec->begin();
+	int tag_assign = 1;
+
+	while (it != vec->end()) {
+		std::copy(it, it + (1 << rec_level), sub_vec.begin());
+		elem.vec = sub_vec;
+		elem.type = 'b';
+		elem.tag = tag_assign++;
+		pend->push_back(elem);
+		if ((1 << (rec_level + 2)) > std::distance(it, vec->end()))
+			break;
+		it += 1 << (rec_level + 1);
+	}
+	if ((1 << rec_level) + (1 << (rec_level + 1)) <= std::distance(it, vec->end())) {
+		it += 1 << (rec_level + 1);
+		std::copy(it, it + (1 << rec_level), sub_vec.begin());
+		elem.vec = sub_vec;
+		elem.type = 'b';
+		elem.tag = tag_assign++;
+		return elem;
+	}
+	elem.tag = 0;
+	return elem;
+}
+
+// binary search to find the right slot
+std::list<element>::iterator binarySearch(std::list<element> &main, int elem, std::list<element>::iterator boundary)
+{
+	std::list<element>::iterator it = main.begin();
+	std::list<element>::iterator mid;
+
+	while (it != boundary) {
+		mid = it;
+		std::advance(mid, std::distance(it, boundary) / 2);
+		if (elem < mid->vec.back())
+			boundary = mid;
+		else
+			it = mid;
+	}
+	return it;
+}
+
+// second face of the algorithm
 void insertion(std::vector<int> *vec, int rec_level)
 {
+	int jacob_iteration = 1;
 	std::list<element> main;
 	std::list<element> pend;
+	element odd;
 
+	std::cout << "Recursion level: " << rec_level << std::endl;
 	initMain(&main, vec, rec_level);
-	initPend(&pend, vec, rec_level);
+	printList(main);
+	odd = initPend(&pend, vec, rec_level);
+	printList(pend);
+	std::cout << "Odd: " << odd.type << odd.tag << " ";
+	printVec(odd.vec);
+
+	std::list<element>::iterator insert = pend.begin();
+	std::list<element>::iterator tmp_it;
 
 	while (!pend.empty()) {
-		std::list<element>::iterator insert = jacobsthalInit(pend, rec_level);
-		std::list<element>::iterator slot = main.begin();
-
-		
-	}	
-
-}
+		std::list<element>::iterator insert = pend.begin();
+		int insertions = jacobsthal(jacob_iteration) - jacobsthal(jacob_iteration - 1);
+		if (insertions > pend.size())
+			insertions = pend.size();
+		std::advance(insert, insertions - 1);
+		for (; insertions > 0; insertions--) {
+			std::list<element>::iterator boundary = main.begin();
+			while ((*boundary).tag != insert->tag)
+				boundary++;
 	
+			std::list<element>::iterator slot = binarySearch(main, insert->vec.back(), boundary);
+			main.insert(slot, *insert);
+			tmp_it = insert;
+			tmp_it--;
+			pend.erase(insert);
+			insert = tmp_it;
+		}
+	
+		std::list<element>::iterator slot = binarySearch(main, insert->vec.back(), boundary);
+		main.insert(slot, *insert);
+
+		if (insert != pend.begin()) {
+			tmp_it = insert;
+			tmp_it--;
+			pend.erase(insert);
+			insert = tmp_it;
+		}
+		else {
+			pend.erase(insert);
+			insert = jacobsthalInit(pend, jacob_iteration);
+			jacob_iteration++;
+		}
+	}
+
+	if (odd.tag != 0) {
+		std::list<element>::iterator slot = binarySearch(main, odd.vec.back(), main.end());
+		main.insert(slot, odd);
+	}
+
+	if (rec_level == 0)
+		return;
+	insertion(vec, rec_level - 1);
+}
+
+// Algorithm with vector
 double PmergeMeVec(std::vector<int> *vec) {
+	unsigned int rec_level = 0;
 	time_t start = time(NULL);
 
-	pairSortRec(vec, 0);
-	//insertion(vec);
-	std::cout << "jacob: " << jacobsthal(17) << std::endl;
+	pairSortRec(vec, &rec_level);
+	insertion(vec, rec_level - 1 - 1);
 
 	time_t end = time(NULL);
 	return difftime(end, start);
