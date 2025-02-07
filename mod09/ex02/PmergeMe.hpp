@@ -11,13 +11,17 @@
 
 double PmergeMeVec(std::vector<int> *vec);
 double PmergeMeDeque(std::deque<int> *deq);
-std::vector<int> getVector(char **input);
-void printVec(std::vector<int> &vec);
 
-struct element {
+struct elementVec {
 	char type;
 	int tag;
 	std::vector<int> vec;
+};
+
+struct elementDeq {
+	char type;
+	int tag;
+	std::deque<int> deq;
 };
 
 #endif

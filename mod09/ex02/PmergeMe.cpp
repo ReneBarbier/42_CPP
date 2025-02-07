@@ -1,99 +1,6 @@
 #include "PmergeMe.hpp"
 
-std::vector<int> getVector(char **input)
-{
-	std::vector<int> vec;
-
-	if (!input || !*input) {
-		std::cerr << "Error\n";
-		exit(1);
-	}
-
-	while (*input) {
-		if (!isdigit(**input)) {
-			std::cerr << "Error\n";
-			exit(1);
-		}
-		vec.push_back(atoi(*input));
-		input++;
-	}
-
-	return vec;
-}
-
-// print the vector
-void printVec(std::vector<int> &vec)
-{
-	std::vector<int>::iterator it = vec.begin();
-
-	while (it != vec.end()) {
-		std::cout << *it << " ";
-		it++;
-	}
-	std::cout << std::endl;
-}
-
-void printList(std::list<element> &list)
-{
-	std::list<element>::iterator it = list.begin();
-
-	while (it != list.end()) {
-		std::cout << it->type << it->tag << " ";
-		printVec(it->vec);
-		it++;
-	}
-}
-
-// advance the it2 iterator by 2^rec_level iteratively
-bool safeIter(std::vector<int>::iterator *it, std::vector<int>::iterator end, int iterations)
-{
-	while (iterations > 0) {
-		if (*it == end) {
-			return false;
-		}
-		(*it)++;
-		iterations--;
-	}
-	return true;
-}
-
-// first face of the algorithm
-void pairSortRec(std::vector<int> *vec, unsigned int *rec_level)
-{
-	if (pow(2, *rec_level) > vec->size() / 2)
-		return;
-
-	std::vector<int>::iterator it = vec->begin() + pow(2, *rec_level) - 1;
-	std::vector<int>::iterator it2 = vec->begin() + pow(2, *rec_level + 1) - 1;
-
-	std::vector<int>::iterator decoy1;
-	std::vector<int>::iterator decoy2;
-
-	while (it2 != vec->end())
-	{
-		if (*it > *it2) {
-			decoy1 = it;
-			decoy2 = it2;
-			while (decoy2 != it) {
-				std::swap(*decoy1, *decoy2);
-				decoy1--;
-				decoy2--;
-			}
-		}
-
-		if (!safeIter(&it2, vec->end(), pow(2, *rec_level + 1)))
-			break;
-		it += pow(2, *rec_level + 1); 
-	}
-
-	//debug
-	std::cout << "Recursion level: " << *rec_level + 1 << std::endl;
-	printVec(*vec);
-
-	(*rec_level)++;
-	pairSortRec(vec, rec_level);
-}
-
+/*============================VECTOR============================*/
 // return the Nth element of the Jacobsthal sequence
 int jacobsthal(int n)
 {
@@ -106,10 +13,42 @@ int jacobsthal(int n)
 	return b;  // Return J(n)
 }
 
-// initialize the main list
-void initMain(std::list<element> *main, std::vector<int> *vec, int rec_level)
+// advance the it2 iterator by 2^rec_level iteratively
+bool safeIterVec(std::vector<int>::iterator *it, std::vector<int>::iterator end, int iterations)
 {
-	element elem;
+	while (iterations > 0) {
+		if (*it == end)
+			return false;
+		(*it)++;
+		iterations--;
+	}
+	return true;
+}
+
+// binary search to find the right slot
+std::list<elementVec>::iterator binarySearchVec(std::list<elementVec> &main, int elem, std::list<elementVec>::iterator boundary)
+{
+	std::list<elementVec>::iterator it = main.begin();
+	std::list<elementVec>::iterator mid;
+
+	while (it != boundary) {
+		mid = it;
+		std::advance(mid, std::distance(it, boundary) / 2);
+		if (elem < mid->vec.back())
+			boundary = mid;
+		else {
+			it = mid;
+			if (std::distance(it, boundary) == 1)
+				return ++it;
+		}
+	}
+	return it;
+}
+
+// initialize the main list
+void initMainVec(std::list<elementVec> *main, std::vector<int> *vec, int rec_level)
+{
+	elementVec elem;
 	std::vector<int> sub_vec(1 << rec_level);
 	std::vector<int>::iterator it = vec->begin() + (1 << rec_level);
 	int tag_assign = 1;
@@ -127,9 +66,9 @@ void initMain(std::list<element> *main, std::vector<int> *vec, int rec_level)
 }
 
 // initialize the pend list
-element initPend(std::list<element> *pend, std::vector<int> *vec, int rec_level)
+elementVec initPendVec(std::list<elementVec> *pend, std::vector<int> *vec, int rec_level)
 {
-	element elem;
+	elementVec elem;
 	std::vector<int> sub_vec(1 << rec_level);
 	std::vector<int>::iterator it = vec->begin();
 	int tag_assign = 1;
@@ -156,19 +95,131 @@ element initPend(std::list<element> *pend, std::vector<int> *vec, int rec_level)
 	return elem;
 }
 
-// binary search to find the right slot
-std::list<element>::iterator binarySearch(std::list<element> &main, int elem, std::list<element>::iterator boundary)
+// second face of the algorithm
+void insertionVec(std::vector<int> *vec, int rec_level)
 {
-	std::list<element>::iterator it = main.begin();
-	std::list<element>::iterator mid;
+	int jacob_iteration = 1;
+	std::list<elementVec> main;
+	std::list<elementVec> pend;
+	std::list<elementVec>::iterator tmp_it;
+	elementVec odd;
+
+	// Initialize the main and pend lists
+	initMainVec(&main, vec, rec_level);
+	odd = initPendVec(&pend, vec, rec_level);
+
+	// Insert B1 into main
+	main.insert(main.begin(), pend.front());
+	pend.pop_front();
+
+	while (!pend.empty()) {
+		std::list<elementVec>::iterator insert = pend.begin();
+		size_t insertions = jacobsthal(jacob_iteration) - jacobsthal(jacob_iteration - 1);
+		if (insertions > pend.size())
+			insertions = pend.size();
+		std::advance(insert, insertions - 1);
+		for (; insertions > 0; insertions--) {
+			std::list<elementVec>::iterator boundary = main.begin();
+			while (boundary->tag != insert->tag)
+				boundary++;
+			std::list<elementVec>::iterator slot = binarySearchVec(main, insert->vec.back(), boundary);
+			main.insert(slot, *insert);
+			tmp_it = insert;
+			tmp_it--;
+			pend.erase(insert);
+			insert = tmp_it;
+		}
+		jacob_iteration++;
+	}
+
+	// Insert the odd elementVec
+	if (odd.tag != 0) {
+		std::list<elementVec>::iterator slot = binarySearchVec(main, odd.vec.back(), main.end());
+		main.insert(slot, odd);
+	}
+
+	// Copy the sorted elementVecs back to one vector
+	std::vector<int> new_vec;
+	std::list<elementVec>::iterator it = main.begin();
+	while (it != main.end()) {
+		std::copy(it->vec.begin(), it->vec.end(), std::back_inserter(new_vec));
+		it++;
+	}
+	// Copy the leftover elementVecs
+	std::copy(vec->end() - (vec->size() % (1 << rec_level)), vec->end(), std::back_inserter(new_vec));
+	*vec = new_vec;
+
+	if (rec_level == 0)
+		return;
+	insertionVec(vec, rec_level - 1);
+}
+
+// first face of the algorithm
+void pairSortRecVec(std::vector<int> *vec, unsigned int *rec_level)
+{
+	if (pow(2, *rec_level) > vec->size() / 2)
+		return;
+
+	std::vector<int>::iterator it = vec->begin() + pow(2, *rec_level) - 1;
+	std::vector<int>::iterator it2 = vec->begin() + pow(2, *rec_level + 1) - 1;
+	std::vector<int>::iterator decoy1;
+	std::vector<int>::iterator decoy2;
+
+	while (it2 != vec->end())
+	{
+		if (*it > *it2) {
+			decoy1 = it;
+			decoy2 = it2;
+			while (decoy2 != it) {
+				std::swap(*decoy1, *decoy2);
+				decoy1--;
+				decoy2--;
+			}
+		}
+		if (!safeIterVec(&it2, vec->end(), pow(2, *rec_level + 1)))
+			break;
+		it += pow(2, *rec_level + 1); 
+	}
+
+	(*rec_level)++;
+	pairSortRecVec(vec, rec_level);
+}
+
+// Algorithm with vector
+double PmergeMeVec(std::vector<int> *vec) {
+	unsigned int rec_level = 0;
+	std::clock_t start = std::clock();
+
+	pairSortRecVec(vec, &rec_level);
+	insertionVec(vec, rec_level - 1);
+
+	std::clock_t end = std::clock();
+	return (static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000);
+}
+
+/*============================DEQUE============================*/
+// advance the it2 iterator by 2^rec_level iteratively
+bool safeIterDeq(std::deque<int>::iterator *it, std::deque<int>::iterator end, int iterations)
+{
+	while (iterations > 0) {
+		if (*it == end)
+			return false;
+		(*it)++;
+		iterations--;
+	}
+	return true;
+}
+
+// binary search to find the right slot
+std::list<elementDeq>::iterator binarySearchDeq(std::list<elementDeq> &main, int elem, std::list<elementDeq>::iterator boundary)
+{
+	std::list<elementDeq>::iterator it = main.begin();
+	std::list<elementDeq>::iterator mid;
 
 	while (it != boundary) {
 		mid = it;
-		std::cout << "Boundary: " << boundary->type << boundary->tag << std::endl;
-		std::cout << "Distance: " << std::distance(it, boundary) / 2 << std::endl;
 		std::advance(mid, std::distance(it, boundary) / 2);
-		std::cout << "Mid: " << mid->type << mid->tag << " " << mid->vec.back() << std::endl;
-		if (elem < mid->vec.back())
+		if (elem < mid->deq.back())
 			boundary = mid;
 		else {
 			it = mid;
@@ -179,87 +230,154 @@ std::list<element>::iterator binarySearch(std::list<element> &main, int elem, st
 	return it;
 }
 
+// initialize the main list
+void initMainDeq(std::list<elementDeq> *main, std::deque<int> *deq, int rec_level)
+{
+	elementDeq elem;
+	std::deque<int> sub_deq(1 << rec_level);
+	std::deque<int>::iterator it = deq->begin() + (1 << rec_level);
+	int tag_assign = 1;
+
+	while (it != deq->end()) {
+		std::copy(it, it + (1 << rec_level), sub_deq.begin());
+		elem.deq = sub_deq;
+		elem.type = 'a';
+		elem.tag = tag_assign++;
+		main->push_back(elem);
+		if ((1 << rec_level) + (1 << (rec_level + 1)) > std::distance(it, deq->end()))
+			break;
+		it += 1 << (rec_level + 1);
+	}
+}
+
+// initialize the pend list
+elementDeq initPendDeq(std::list<elementDeq> *pend, std::deque<int> *deq, int rec_level)
+{
+	elementDeq elem;
+	std::deque<int> sub_deq(1 << rec_level);
+	std::deque<int>::iterator it = deq->begin();
+	int tag_assign = 1;
+
+	while (it != deq->end()) {
+		std::copy(it, it + (1 << rec_level), sub_deq.begin());
+		elem.deq = sub_deq;
+		elem.type = 'b';
+		elem.tag = tag_assign++;
+		pend->push_back(elem);
+		if ((1 << (rec_level + 2)) > std::distance(it, deq->end()))
+			break;
+		it += 1 << (rec_level + 1);
+	}
+	if ((1 << rec_level) + (1 << (rec_level + 1)) <= std::distance(it, deq->end())) {
+		it += 1 << (rec_level + 1);
+		std::copy(it, it + (1 << rec_level), sub_deq.begin());
+		elem.deq = sub_deq;
+		elem.type = 'b';
+		elem.tag = tag_assign++;
+		return elem;
+	}
+	elem.tag = 0;
+	return elem;
+}
+
 // second face of the algorithm
-void insertion(std::vector<int> *vec, int rec_level)
+void insertionDeq(std::deque<int> *deq, int rec_level)
 {
 	int jacob_iteration = 1;
-	std::list<element> main;
-	std::list<element> pend;
-	element odd;
+	std::list<elementDeq> main;
+	std::list<elementDeq> pend;
+	std::list<elementDeq>::iterator tmp_it;
+	elementDeq odd;
 
-	std::cout << "Recursion level: " << rec_level << std::endl;
-	initMain(&main, vec, rec_level);
-	printList(main);
-	odd = initPend(&pend, vec, rec_level);
-	printList(pend);
-	std::cout << "Odd: " << odd.type << odd.tag << " ";
-	printVec(odd.vec);
+	// Initialize the main and pend lists
+	initMainDeq(&main, deq, rec_level);
+	odd = initPendDeq(&pend, deq, rec_level);
 
-	std::list<element>::iterator tmp_it;
-
+	// Insert B1 into main
 	main.insert(main.begin(), pend.front());
 	pend.pop_front();
 
 	while (!pend.empty()) {
-		std::cout << "Iteration: " << jacob_iteration << std::endl;
-		std::list<element>::iterator insert = pend.begin();
+		std::list<elementDeq>::iterator insert = pend.begin();
 		size_t insertions = jacobsthal(jacob_iteration) - jacobsthal(jacob_iteration - 1);
 		if (insertions > pend.size())
 			insertions = pend.size();
 		std::advance(insert, insertions - 1);
 		for (; insertions > 0; insertions--) {
-			std::list<element>::iterator boundary = main.begin();
+			std::list<elementDeq>::iterator boundary = main.begin();
 			while (boundary->tag != insert->tag)
 				boundary++;
-			std::cout << "Insert: " << insert->type << insert->tag << " ";
-			std::cout << "Boundary: " << boundary->type << boundary->tag << std::endl;
-	
-			std::list<element>::iterator slot = binarySearch(main, insert->vec.back(), boundary);
+			std::list<elementDeq>::iterator slot = binarySearchDeq(main, insert->deq.back(), boundary);
 			main.insert(slot, *insert);
 			tmp_it = insert;
 			tmp_it--;
 			pend.erase(insert);
 			insert = tmp_it;
-			std::cout << "Main:\n";
-			printList(main);
-			std::cout << "Pend:\n";
-			printList(pend);
-			//exit(1);
 		}
 		jacob_iteration++;
 	}
 
-
+	// Insert the odd elementDeq
 	if (odd.tag != 0) {
-		std::list<element>::iterator slot = binarySearch(main, odd.vec.back(), main.end());
+		std::list<elementDeq>::iterator slot = binarySearchDeq(main, odd.deq.back(), main.end());
 		main.insert(slot, odd);
-		std::cout << "Main (AFTER ODD):\n";
-		printList(main);
 	}
 
-
+	// Copy the sorted elementVecs back to one vector
 	std::vector<int> new_vec;
-	std::list<element>::iterator it = main.begin();
+	std::list<elementDeq>::iterator it = main.begin();
 	while (it != main.end()) {
-		std::copy(it->vec.begin(), it->vec.end(), std::back_inserter(new_vec));
+		std::copy(it->deq.begin(), it->deq.end(), std::back_inserter(new_vec));
 		it++;
 	}
-	std::copy(vec->end() - (vec->size() % (1 << rec_level)), vec->end(), std::back_inserter(new_vec));
-	*vec = new_vec;
+	// Copy the leftover elementVecs
+	std::copy(deq->end() - (deq->size() % (1 << rec_level)), deq->end(), std::back_inserter(new_vec));
+	*deq = std::deque<int>(new_vec.begin(), new_vec.end());
 
 	if (rec_level == 0)
 		return;
-	insertion(vec, rec_level - 1);
+	insertionDeq(deq, rec_level - 1);
 }
 
-// Algorithm with vector
-double PmergeMeVec(std::vector<int> *vec) {
+// first face of the algorithm
+void pairSortRecDeq(std::deque<int> *deq, unsigned int *rec_level)
+{
+	if (pow(2, *rec_level) > deq->size() / 2)
+		return;
+
+	std::deque<int>::iterator it = deq->begin() + pow(2, *rec_level) - 1;
+	std::deque<int>::iterator it2 = deq->begin() + pow(2, *rec_level + 1) - 1;
+	std::deque<int>::iterator decoy1;
+	std::deque<int>::iterator decoy2;
+
+	while (it2 != deq->end())
+	{
+		if (*it > *it2) {
+			decoy1 = it;
+			decoy2 = it2;
+			while (decoy2 != it) {
+				std::swap(*decoy1, *decoy2);
+				decoy1--;
+				decoy2--;
+			}
+		}
+		if (!safeIterDeq(&it2, deq->end(), pow(2, *rec_level + 1)))
+			break;
+		it += pow(2, *rec_level + 1); 
+	}
+
+	(*rec_level)++;
+	pairSortRecDeq(deq, rec_level);
+}
+
+// Algorithm with deque
+double PmergeMeDeque(std::deque<int> *deq) {
 	unsigned int rec_level = 0;
-	time_t start = time(NULL);
+	std::clock_t start = std::clock();
 
-	pairSortRec(vec, &rec_level);
-	insertion(vec, rec_level - 1);
+	pairSortRecDeq(deq, &rec_level);
+	insertionDeq(deq, rec_level - 1);
 
-	time_t end = time(NULL);
-	return difftime(end, start);
+	std::clock_t end = std::clock();
+	return (static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000);
 }
