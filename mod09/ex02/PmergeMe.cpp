@@ -188,12 +188,12 @@ void pairSortRecVec(std::vector<int> *vec, unsigned int *rec_level)
 // Algorithm with vector
 double PmergeMeVec(std::vector<int> *vec) {
 	unsigned int rec_level = 0;
-	std::clock_t start = std::clock();
+	clock_t start = clock();
 
 	pairSortRecVec(vec, &rec_level);
 	insertionVec(vec, rec_level - 1);
 
-	std::clock_t end = std::clock();
+	clock_t end = clock();
 	return (static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000);
 }
 
@@ -373,11 +373,11 @@ void pairSortRecDeq(std::deque<int> *deq, unsigned int *rec_level)
 // Algorithm with deque
 double PmergeMeDeque(std::deque<int> *deq) {
 	unsigned int rec_level = 0;
-	std::clock_t start = std::clock();
+	clock_t start = clock();
 
 	pairSortRecDeq(deq, &rec_level);
 	insertionDeq(deq, rec_level - 1);
 
-	std::clock_t end = std::clock();
+	clock_t end = clock();
 	return (static_cast<double>(end - start) / CLOCKS_PER_SEC * 1000);
 }

@@ -66,7 +66,7 @@ int main(int argc, char **argv)
 	//sortedCheck(vec);
 
 	std::cout << "Time to process a range of " << vec.size() << " elements with std::vector: " << timeVec << " ms\n";
-	std::cout << "Time to process a range of " << deq.size() << " elements with std::deque: " << timeDeq << " us\n";
+	std::cout << "Time to process a range of " << deq.size() << " elements with std::deque:  " << timeDeq << " ms\n";
 
 	return 0;
 }
