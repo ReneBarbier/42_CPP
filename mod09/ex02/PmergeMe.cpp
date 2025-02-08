@@ -1,6 +1,5 @@
 #include "PmergeMe.hpp"
 
-/*============================VECTOR============================*/
 // return the Nth element of the Jacobsthal sequence
 int jacobsthal(int n)
 {
@@ -13,6 +12,7 @@ int jacobsthal(int n)
 	return b;  // Return J(n)
 }
 
+/*============================VECTOR============================*/
 // advance the it2 iterator by 2^rec_level iteratively
 bool safeIterVec(std::vector<int>::iterator *it, std::vector<int>::iterator end, int iterations)
 {

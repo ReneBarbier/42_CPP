@@ -54,17 +54,19 @@ int main(int argc, char **argv)
 	std::vector<int> vec = getVector(++argv);
 	std::deque<int> deq(vec.begin(), vec.end());
 
-	std::cout << "Before: ";
-	printVec(vec);
+	// std::cout << "Before: ";
+	// printVec(vec);
 
-	double timeVec = PmergeMeVec(&vec);
-	double timeDeq = PmergeMeDeque(&deq);
+	// double timeVec = PmergeMeVec(&vec);
+	// double timeDeq = PmergeMeDeque(&deq);
 
-	std::cout << "After: ";
-	printVec(vec);
+	// std::cout << "After: ";
+	// printVec(vec);
 
 	//sortedCheck(vec);
-
+	
+	double timeVec = PmergeMe(&vec);
+	double timeDeq = PmergeMe(&deq);
 	std::cout << "Time to process a range of " << vec.size() << " elements with std::vector: " << timeVec << " ms\n";
 	std::cout << "Time to process a range of " << deq.size() << " elements with std::deque:  " << timeDeq << " ms\n";
 
